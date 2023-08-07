@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_chat/services/chati_provider.dart';
+import 'package:firebase_chat/widgets/msg_bubble.dart';
 import 'package:flutter/material.dart';
 
 class chatScreen extends StatefulWidget {
@@ -35,6 +36,7 @@ class _chatScreenState extends State<chatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black87,
       appBar: AppBar(
         title: Text(widget.recUserEmail),
         backgroundColor: Colors.black26,
@@ -57,7 +59,6 @@ class _chatScreenState extends State<chatScreen> {
           return Text('Error');
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          print('circularprogress');
           return const CircularProgressIndicator(
             color: Colors.black,
           );
@@ -72,26 +73,36 @@ class _chatScreenState extends State<chatScreen> {
 
   Widget msgInputField() {
     print('msgInputField');
-    return Row(
-      children: [
-        Expanded(
-            child: TextField(
-          controller: msgController,
-          obscureText: false,
-          decoration: InputDecoration(
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+              child: TextField(
+            controller: msgController,
+            obscureText: false,
+            decoration: InputDecoration(
+              hintStyle: const TextStyle(color: Colors.white),
               hintText: 'Enter Message',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(30),
               ),
-              prefixIcon: InkWell(
-                onTap: () => sendMsg(),
-                child: const Icon(
+            ),
+          )),
+          const SizedBox(
+            width: 10,
+          ),
+          InkWell(
+            onTap: () => sendMsg(),
+            child: const CircleAvatar(
+                backgroundColor: Colors.grey,
+                child: Icon(
                   Icons.arrow_upward_rounded,
                   color: Colors.black,
-                ),
-              )),
-        ))
-      ],
+                )),
+          ),
+        ],
+      ),
     );
   }
 
@@ -102,15 +113,25 @@ class _chatScreenState extends State<chatScreen> {
     var myAlignment = data['senderId'] == auth.currentUser!.uid
         ? Alignment.centerRight
         : Alignment.centerLeft;
-
+    Color clr =
+        data['senderId'] == auth.currentUser!.uid ? Colors.blue : Colors.green;
     return Container(
       alignment: myAlignment,
       child: Column(
+        crossAxisAlignment: (data['senderId'] == auth.currentUser!.uid)
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
+        mainAxisAlignment: (data['senderId'] == auth.currentUser!.uid)
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         children: [
           // Text(data['senderEmail']),
-          Text(
-            data['message'],
-            style: TextStyle(color: Colors.black, fontSize: 18),
+
+          // data['message'],
+          // style: TextStyle(color: Colors.black, fontSize: 18),
+          MsgBubble(
+            msg: data['message'].toString(),
+            clr: clr,
           ),
         ],
       ),

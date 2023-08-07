@@ -6,7 +6,6 @@ import 'package:firebase_chat/views/chatScreen.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/show_snackbar.dart';
-import 'msgScreen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,6 +20,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.black87,
         body: Padding(
           padding: const EdgeInsets.all(12.0),
           child: StreamBuilder(
@@ -56,9 +56,11 @@ class _HomePageState extends State<HomePage> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => chatScreen(
-                                  recUserEmail:
-                                      auth.currentUser!.email.toString(),
-                                  recUserId: auth.currentUser!.uid.toString(),
+                                  recUserEmail: documentSnapshot['email'],
+
+                                  // auth.currentUser!.email.toString(),
+                                  recUserId: documentSnapshot['uid'],
+                                  // auth.currentUser!.uid.toString(),
                                 ),
                               ),
                             );
@@ -74,12 +76,13 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         appBar: AppBar(
-          centerTitle: true,
-          title: const Text('Chat App'),
-          leading: const CircleAvatar(
-            child: Icon(Icons.message_rounded),
-          ),
-        ),
+            centerTitle: true,
+            title: const Text('Chat App'),
+            actions: const [
+              CircleAvatar(
+                child: Icon(Icons.message_rounded),
+              ),
+            ]),
       ),
     );
   }
