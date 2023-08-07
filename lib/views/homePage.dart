@@ -2,7 +2,10 @@ import 'dart:html';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_chat/views/Login.dart';
 import 'package:firebase_chat/views/chatScreen.dart';
+import 'package:firebase_chat/views/splash_screen.dart';
+import 'package:firebase_chat/widgets/bottomNavBar.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/show_snackbar.dart';
@@ -20,7 +23,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.black87,
+        bottomNavigationBar: buildBottomNavigationBar(),
+        backgroundColor: Colors.white,
         body: Padding(
           padding: const EdgeInsets.all(12.0),
           child: StreamBuilder(
@@ -40,16 +44,25 @@ class _HomePageState extends State<HomePage> {
                   // Map<String, String> data = snapshot.data! as Map<String, String>;
                   if (auth.currentUser!.email != documentSnapshot['email']) {
                     return Card(
-                      color: Colors.white60,
+                      color: Colors.white70,
                       margin: const EdgeInsets.all(5),
                       child: ListTile(
-                          title: Text(documentSnapshot['email']),
+                          title: Text(
+                            documentSnapshot['email'],
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w600),
+                          ),
                           subtitle: const Text(
                             'Tap to send message',
                             style: TextStyle(color: Colors.black54),
                           ),
-                          trailing: const CircleAvatar(
-                            child: Icon(Icons.person_2_rounded),
+                          leading: const CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            child: Icon(
+                              Icons.person_2_rounded,
+                              color: Colors.white,
+                            ),
+                            // backgroundImage: AssetImage('background.jpg'),
                           ),
                           onTap: () {
                             Navigator.push(
@@ -75,14 +88,24 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         ),
-        appBar: AppBar(
-            centerTitle: true,
-            title: const Text('Chat App'),
-            actions: const [
-              CircleAvatar(
-                child: Icon(Icons.message_rounded),
+        appBar:
+            AppBar(centerTitle: true, title: const Text('Chat App'), actions: [
+          InkWell(
+            onTap: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Splash(),
+                  ));
+            },
+            child: const CircleAvatar(
+              child: Icon(
+                Icons.logout_rounded,
+                color: Colors.white,
               ),
-            ]),
+            ),
+          ),
+        ]),
       ),
     );
   }

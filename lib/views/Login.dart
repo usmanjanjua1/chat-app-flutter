@@ -1,11 +1,15 @@
 import 'package:firebase_chat/services/auth_provider.dart';
 import 'package:firebase_chat/views/signUpScreen.dart';
+import 'package:firebase_chat/views/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../constants/common_functions.dart';
 import '../constants/controllers.dart';
 import '../constants/strings.dart';
+import '../widgets/customEmailTextField.dart';
+import '../widgets/customPasswordTExtField.dart';
+import '../widgets/welcomBar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -19,8 +23,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    Controllers.emailController.dispose();
-    Controllers.passwordController.dispose();
+    Controllers.emailController.clear();
+    Controllers.passwordController.clear();
     super.dispose();
   }
 
@@ -30,94 +34,90 @@ class _LoginScreenState extends State<LoginScreen> {
       String password = Controllers.passwordController.text;
       AuthProvider authProvider = Provider.of<AuthProvider>(context,
           listen: false); ///////////////////////Provider is here
-      print("Provider created");
+
       // Call the signIn method from the AuthProvider
       var user = await authProvider.signIn(email, password, context);
-      print("signin called");
-      print('Email: ${Controllers.emailController.text}');
-      print('Password: ${Controllers.passwordController.text}');
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double widht = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        elevation: 10,
-        backgroundColor: Colors.black38,
-        title: const Text('Firebase Auth'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Icon(
-                  Icons.person_2_rounded,
-                  size: MediaQuery.of(context).size.height * 0.28,
-                ),
-                TextFormField(
-                  controller: Controllers.emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    if (!RegExp(MyStrings.emailRegex).hasMatch(value)) {
-                      return 'Please enter a valid email address';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16),
-                TextFormField(
-                  controller: Controllers.passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    if (!RegExp(MyStrings.passwordRegex).hasMatch(value)) {
-                      return 'Password must be at least 6 characters long';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _handleLoginButtonPressed,
-                  child: const Text(
-                    'Login',
-                  ),
-                ),
-                Row(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.white70, Colors.white38],
+            begin: Alignment.bottomRight,
+            end: Alignment.topLeft,
+          ),
+        ),
+        child: ListView(children: [
+          AppBar(
+            backgroundColor: Colors.blue.shade200,
+            title: const Text('Firebase Auth'),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Center(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Not a user?'),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SignUpScreen(),
-                              ));
-                        },
-                        child: const Text("SignUp>"))
+                    welcomTextBar(CommonStrings.welcomText),
+                    const Image(
+                      image: AssetImage('assets/chat.jpg'),
+                    ),
+                    emailTextField(),
+                    const SizedBox(height: 16),
+                    passwordTExtField(),
+                    const SizedBox(height: 16),
+                    loginButton(),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('Not a user?'),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SignUpScreen(),
+                                  ));
+                            },
+                            child: const Text("SignUp>"))
+                      ],
+                    )
                   ],
-                )
-              ],
+                ),
+              ),
             ),
           ),
+        ]),
+      ),
+    );
+  }
+
+  Widget loginButton() {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.black,
+          alignment: Alignment.center,
+          elevation: 10,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(15)))),
+      onPressed: _handleLoginButtonPressed,
+      child: const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Text(
+          'Login',
+          style: TextStyle(fontSize: 20),
         ),
       ),
     );

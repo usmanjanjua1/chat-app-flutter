@@ -36,16 +36,33 @@ class _chatScreenState extends State<chatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black87,
-      appBar: AppBar(
-        title: Text(widget.recUserEmail),
-        backgroundColor: Colors.black26,
-      ),
-      body: Column(
-        children: [
-          Expanded(child: chatBuilder()),
-          msgInputField(),
-        ],
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('background2.jpg'),
+            fit: BoxFit.fill,
+          ),
+        ),
+        child: Column(
+          children: [
+            AppBar(
+              backgroundColor: Colors.transparent,
+              title: Text(widget.recUserEmail),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.local_phone),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: const Icon(Icons.videocam),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+            Expanded(child: chatBuilder()),
+            msgInputField(),
+          ],
+        ),
       ),
     );
   }
@@ -79,6 +96,7 @@ class _chatScreenState extends State<chatScreen> {
         children: [
           Expanded(
               child: TextField(
+            style: TextStyle(color: Colors.white),
             controller: msgController,
             obscureText: false,
             decoration: InputDecoration(
@@ -87,6 +105,8 @@ class _chatScreenState extends State<chatScreen> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(30),
               ),
+              enabledBorder:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
             ),
           )),
           const SizedBox(
@@ -114,7 +134,7 @@ class _chatScreenState extends State<chatScreen> {
         ? Alignment.centerRight
         : Alignment.centerLeft;
     Color clr =
-        data['senderId'] == auth.currentUser!.uid ? Colors.blue : Colors.green;
+        data['senderId'] == auth.currentUser!.uid ? Colors.grey : Colors.green;
     return Container(
       alignment: myAlignment,
       child: Column(

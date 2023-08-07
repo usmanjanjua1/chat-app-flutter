@@ -2,6 +2,7 @@ import 'package:firebase_chat/models/user.dart';
 import 'package:firebase_chat/services/auth_provider.dart';
 import 'package:firebase_chat/services/signup_provider.dart';
 import 'package:firebase_chat/views/Login.dart';
+import 'package:firebase_chat/views/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Our Chat ',
-      home: LoginScreen(),
+      home: Splash(),
     );
   }
 }

@@ -18,7 +18,7 @@ class MsgBubble extends StatelessWidget {
         ),
         child: Text(
           msg,
-          style: const TextStyle(color: Colors.white, fontSize: 18),
+          style: const TextStyle(color: Colors.white, fontSize: 22),
         ),
       ),
     );
